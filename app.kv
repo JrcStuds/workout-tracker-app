@@ -1,88 +1,47 @@
 #:kivy 2.3.1
 
 
-# <SetInputRow>:
-#     orientation: 'horizontal'
-#     size_hint_y: None
+<ExerciseSets>: # AnchorLayout that aligns to the top
+    anchor_x: 'center'
+    anchor_y: 'top'
+    size_hint: (1.0, 1.0)
+    
+    BoxLayout: # for the headers, set inputs, and add set button
+        id: set_container
+        orientation: 'vertical'
 
-#     TextInput:
-#     TextInput:
-#     TextInput:
-#     TextInput:
+        BoxLayout: # for the headers
+            id: set_headers
+
+            Label:
+                text: 'Set'
+            Label:
+                text: 'Kg'
+            Label:
+                text: 'Reps'
+            Label:
+                text: 'RIR'
+        
+        # insert set input widgets here
+
+        AnchorLayout: # to align the add set button
+            anchor_x: 'center'
+            anchor_y: 'center'
+
+            Button: # add set button
+                text: '+ Add Set'
+                on_press: root.add_set()
+                size_hint_x: 0.3
 
 
-# <ExerciseSets>:
-#     orientation: 'vertical'
-
-#     Button:
-#         text: '+ Add Row'
-#         on_press: root.add_row()
-
-
-<SetInputRow>:
-    size_hint_y: None
+<SetInputRow>: # BoxLayout for the input fields
     orientation: 'horizontal'
-    padding: 5
-    spacing: 5
-    height: 50  # will be overridden by update_height
-    canvas.before:
-        Color:
-            rgba: 0.6, 0.6, 0.6, 1
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: [10]
+    # size_hint_y: None
+    # size_y: root.height * 0.1
+
+    Label: # for the set number
+        text: '1'
 
     TextInput:
-        text: '0'
-        multiline: False
-        halign: 'center'
-        valign: 'middle'
     TextInput:
-        text: '0'
-        multiline: False
-        halign: 'center'
     TextInput:
-        text: '0'
-        multiline: False
-        halign: 'center'
-    TextInput:
-        text: '0'
-        multiline: False
-        halign: 'center'
-
-<ExerciseSets>:
-    orientation: 'vertical'
-    padding: 10
-    spacing: 10
-
-    BoxLayout:
-        size_hint_y: None
-        height: 30
-        spacing: 5
-        Label:
-            text: 'Set'
-        Label:
-            text: 'Kg'
-        Label:
-            text: 'Reps'
-        Label:
-            text: 'RIR'
-
-    ScrollView:
-        do_scroll_x: False
-        GridLayout:
-            id: rows_container
-            cols: 1
-            size_hint_y: None
-            height: self.minimum_height
-            spacing: 5
-
-    BoxLayout:
-        size_hint_y: None
-        height: 40
-        Button:
-            text: '+ Add Set'
-            size_hint_x: None
-            width: 120
-            on_press: root.add_row()
