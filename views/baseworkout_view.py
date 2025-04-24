@@ -1,5 +1,6 @@
 import flet as ft
 import requests
+from backend import services
 from datetime import datetime
 
 
@@ -38,7 +39,8 @@ class ExerciseSelectionPanel(ft.AlertDialog):
     
 
     def get_exercises(self):
-        return requests.get('http://127.0.0.1:5000/getexercisenames').json()['exercises']
+        # return requests.get('http://127.0.0.1:5000/getexercisenames').json()['exercises']
+        return services.get_exercise_definitions()['exercises']
 
 
 

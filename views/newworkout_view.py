@@ -1,5 +1,6 @@
 import flet as ft
 import requests
+from backend import services
 from datetime import datetime
 from .baseworkout_view import *
 
@@ -42,10 +43,12 @@ class NewWorkoutView(BaseWorkoutView):
             }
         }
         
-        requests.post(
-            url = 'http://127.0.0.1:5000/addworkout',
-            json = result
-        )
+        # requests.post(
+        #     url = 'http://127.0.0.1:5000/addworkout',
+        #     json = result
+        # )
+
+        services.add_workout(data=result)
 
         self.reset_view()
 

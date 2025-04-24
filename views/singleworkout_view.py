@@ -1,5 +1,6 @@
 import flet as ft
 import requests
+from backend import services
 from .baseworkout_view import *
 
 
@@ -104,7 +105,8 @@ class SingleWorkoutView(BaseWorkoutView):
         self.exercise_count = 0
         self.add_initial_set = False
 
-        self.data = requests.get(f'http://127.0.0.1:5000/getworkout/{self.date}').json()
+        # self.data = requests.get(f'http://127.0.0.1:5000/getworkout/{self.date}').json()
+        self.data = services.get_workout(date=self.date)
         
         for exercise_data in self.data['workout']['exercises']:
             self.add_exercise()
@@ -143,10 +145,12 @@ class SingleWorkoutView(BaseWorkoutView):
             }
         }
 
-        requests.post(
-            url = 'http://127.0.0.1:5000/editworkout',
-            json = result
-        )
+        # requests.post(
+        #     url = 'http://127.0.0.1:5000/editworkout',
+        #     json = result
+        # )
+
+        services.edit_workout(data=result)
 
         self.date = self.date_picker.value.strftime('%Y-%m-%d')
         self.onload()

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy import desc
-from backend.models import db, Workout, Exercise, Set, ExerciseDefinition
+from flask_backend.models import db, Workout, Exercise, Set, ExerciseDefinition
 
 routes = Blueprint('routes', __name__)
 
@@ -99,13 +99,10 @@ def edit_workout():
                         "reps": 10,
                         "rir": 1
                     },
-                    {
-                        "weight": 60,
-                        "reps": 10,
-                        "rir": 1
-                    }
+                    ...
                 ]
-            }
+            },
+            ...
         ]
     }
 }

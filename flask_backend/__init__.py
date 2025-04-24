@@ -1,6 +1,6 @@
 from flask import Flask
-from backend.models import db
-from backend.routes import routes
+from flask_backend.models import db
+from flask_backend.routes import routes
 
 
 # app = Flask(__name__)

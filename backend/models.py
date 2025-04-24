@@ -1,36 +1,52 @@
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from .database import Base, engine
 
-db = SQLAlchemy()
 
-class Workout(db.Model):
+class Workout(Base):
     __tablename__ = 'workouts'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String, unique=True, nullable=False)
-    exercises = db.relationship('Exercise', back_populates='workout', cascade='all, delete-orphan')
 
-class Exercise(db.Model):
+    id = Column(Integer, primary_key=True)
+    date = Column(String, unique=True)
+
+    exercises = relationship('Exercise', back_populates='workout', cascade='all, delete-orphan')
+
+
+class Exercise(Base):
     __tablename__ = 'exercises'
-    id = db.Column(db.Integer, primary_key=True)
-    workout_id = db.Column(db.ForeignKey('workouts.id'))
-    definition_id = db.Column(db.ForeignKey('exercise_definitions.id'))
-    workout = db.relationship('Workout', back_populates='exercises')
-    sets = db.relationship('Set', back_populates='exercise', cascade='all, delete-orphan')
-    definition = db.relationship('ExerciseDefinition', back_populates='exercises')
 
-class Set(db.Model):
+    id = Column(Integer, primary_key=True)
+    workout_id = Column(ForeignKey('workouts.id'))
+    definition_id = Column(ForeignKey('exercise_definitions.id'))
+
+    workout = relationship('Workout', back_populates='exercises')
+    sets = relationship('Set', back_populates='exercise', cascade='all, delete-orphan')
+    definition = relationship('ExerciseDefinition', back_populates='exercises')
+
+
+class Set(Base):
     __tablename__ = 'sets'
-    id = db.Column(db.Integer, primary_key=True)
-    exercise_id = db.Column(db.ForeignKey('exercises.id'))
-    set_number = db.Column(db.Integer)
-    weight = db.Column(db.Float)
-    reps = db.Column(db.Integer)
-    rir = db.Column(db.Integer)
-    exercise = db.relationship('Exercise', back_populates='sets')
 
-class ExerciseDefinition(db.Model):
+    id = Column(Integer, primary_key=True)
+    exercise_id = Column(ForeignKey('exercises.id'))
+    set_number = Column(Integer)
+    weight = Column(Float)
+    reps = Column(Integer)
+    rir = Column(Integer)
+
+    exercise = relationship('Exercise', back_populates='sets')
+
+
+class ExerciseDefinition(Base):
     __tablename__ = 'exercise_definitions'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    primary = db.Column(db.String)
-    secondary = db.Column(db.String)
-    exercises = db.relationship('Exercise', back_populates='definition', cascade='all, delete-orphan')
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    primary = Column(String)
+    secondary = Column(String)
+
+    exercises = relationship('Exercise', back_populates='definition', cascade='all, delete-orphan')
+
+
+def create_tables():
+    Base.metadata.create_all(engine)

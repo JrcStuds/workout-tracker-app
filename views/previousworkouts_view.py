@@ -1,5 +1,6 @@
 import flet as ft
 import requests
+from backend import services
 
 
 class WorkoutCard(ft.Card):
@@ -42,7 +43,8 @@ class WorkoutCard(ft.Card):
     
     def delete_workout(self, e):
         try:
-            requests.delete(f'http://127.0.0.1:5000/deleteworkout/{self.data['date']}')
+            # requests.delete(f'http://127.0.0.1:5000/deleteworkout/{self.data['date']}')
+            services.delete_workout(date=self.data['date'])
             self.on_delete()
         except Exception as ex:
             self.content.content.controls.append(ft.Text(ex))
@@ -63,9 +65,10 @@ class PreviousWorkoutsView(ft.View):
 
     def get_workouts(self, e=None):
         try:
-            response = requests.get('http://127.0.0.1:5000/getworkoutsoverview').json()
+            # data = requests.get('http://127.0.0.1:5000/getworkoutsoverview').json()
+            data = services.get_workouts_overview()
             self.workout_cards.controls.clear()
-            for workout in response['workouts']:
+            for workout in data['workouts']:
                 self.workout_cards.controls.append(WorkoutCard(
                     data = workout,
                     on_delete = self.get_workouts,
