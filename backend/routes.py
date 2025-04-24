@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy import desc
-from flask_backend.models import db, Workout, Exercise, Set, ExerciseDefinition
+from backend.models import db, Workout, Exercise, Set, ExerciseDefinition
 
 routes = Blueprint('routes', __name__)
 

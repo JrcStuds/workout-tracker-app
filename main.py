@@ -1,10 +1,9 @@
 import flet as ft
 import threading
-from flask_backend import create_app
+from backend import create_app
 from views.previousworkouts_view import PreviousWorkoutsView
 from views.newworkout_view import NewWorkoutView
 from views.singleworkout_view import SingleWorkoutView
-import backend
 
 
 def run_flask():
