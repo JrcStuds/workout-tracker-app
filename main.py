@@ -1,6 +1,4 @@
 import flet as ft
-import threading
-from flask_backend import create_app
 from backend import models
 from views.previousworkouts_view import PreviousWorkoutsView
 from views.newworkout_view import NewWorkoutView
@@ -9,14 +7,6 @@ from views.singleworkout_view import SingleWorkoutView
 
 # create sqlalchemy tables
 models.create_tables()
-
-
-# --- start flask server ---
-def run_flask():
-    app = create_app()
-    app.run(port=5000, threaded=True)
-
-threading.Thread(target=run_flask, daemon=True).start()
 
 
 def main(page: ft.Page):

@@ -57,6 +57,25 @@ def add_workout(data):
         session.commit()
 
 
+# input data format:
+"""
+{
+    "name": "Bench Press",
+    "primary": "chest",
+    "secondary: "tricep,front_delt"
+}
+"""
+def add_exercise_definition(data):
+    with Session() as session:
+        definition_obj = ExerciseDefinition(
+            name = data['name'],
+            primary = data['primary'],
+            secondary = data['secondary']
+        )
+        session.add(definition_obj)
+        session.commit()
+
+
 # --- READ ---
 
 # return data format:

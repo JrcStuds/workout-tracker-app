@@ -1,7 +1,61 @@
 import flet as ft
-import requests
 from backend import services
 from datetime import datetime
+
+
+
+exercise_selection_panels = []
+
+
+
+class AddExerciseDefinitionPanel(ft.AlertDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.name_field = ft.TextField()
+        self.submit_button = ft.ElevatedButton(
+            icon = ft.Icons.SEND,
+            text = "Submit Exercise",
+            on_click = self.submit_exercise_definition
+        )
+
+        self.content = ft.Container(
+            content = ft.Column(
+                controls = [
+                    ft.Text("Exercise Name"),
+                    self.name_field,
+                    self.submit_button
+                ]
+            )
+        )
+
+        
+    def submit_exercise_definition(self, e=None):
+        data = {
+            'name': self.name_field.value,
+            'primary': None,
+            'secondary': None
+        }
+
+        services.add_exercise_definition(data=data)
+
+        for button in exercise_selection_panels:
+            button.onload()
+
+        self.open = False
+        self.page.update()
+
+
+
+class AddExerciseDefinitionListTile(ft.Container):
+    def __init__(self):
+        super().__init__()
+
+        self.content = ft.ListTile(
+            leading = ft.Icon(ft.Icons.ADD),
+            title = ft.Text("Add Exercise"),
+            on_click = lambda e: self.page.open(AddExerciseDefinitionPanel())
+        )
 
 
 
@@ -21,26 +75,40 @@ class ExerciseSelectionPanel(ft.AlertDialog):
     def __init__(self, update_name):
         super().__init__()
         self.expand = True
-
-        exercise_names = self.get_exercises()
+        self.update_name = update_name
+        self.exercise_names = services.get_exercise_definitions()['exercises']
         
-        exercise_list_tiles = []
-        for name in exercise_names:
-            exercise_list_tiles.append(ExerciseListTile(
+        self.exercise_list_tiles = []
+        for name in self.exercise_names:
+            self.exercise_list_tiles.append(ExerciseListTile(
                 name = name,
                 update_name = update_name
             ))
+        self.exercise_list_tiles.append(AddExerciseDefinitionListTile())
 
         self.content = ft.Container(
             content = ft.ListView(
-                controls = exercise_list_tiles
+                controls = self.exercise_list_tiles
             )
         )
-    
 
-    def get_exercises(self):
-        # return requests.get('http://127.0.0.1:5000/getexercisenames').json()['exercises']
-        return services.get_exercise_definitions()['exercises']
+        exercise_selection_panels.append(self)
+
+    
+    def onload(self):
+        self.exercise_names = services.get_exercise_definitions()['exercises']
+        
+        self.exercise_list_tiles = []
+        for name in self.exercise_names:
+            self.exercise_list_tiles.append(ExerciseListTile(
+                name = name,
+                update_name = self.update_name
+            ))
+        self.exercise_list_tiles.append(AddExerciseDefinitionListTile())
+
+        self.content.content.controls = self.exercise_list_tiles
+        self.content.update()
+        self.update()
 
 
 
